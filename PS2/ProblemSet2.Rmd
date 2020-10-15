@@ -34,7 +34,7 @@ gss_data = read_csv("gss.csv")
 cleaned_gss_data = gss_data %>% 
   filter(!is.na(age_first_child)) %>%  
   mutate(age_when_having_first_child = age - age_first_child) %>% 
-  select(age_when_having_first_child, age_at_first_marrige,education)
+  select(age_when_having_first_child, age_at_first_marriage,education)
 
 str(cleaned_gss_data)
 my_LRmodel <- lm(age_when_having_first_child ~ age_at_first_marriage +
