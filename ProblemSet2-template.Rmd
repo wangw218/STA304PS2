@@ -25,6 +25,34 @@ Here is where you should give insight into the setting and introduce the goal of
 ## Data
 
 Introduce the data, explain why it was selected. Make sure to comment on important features and highlight any potential drawbacks to the data.
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+# library(survey)
+gss_data = read_csv("gss.csv")
+
+#get the no NA "age_first_child" caseid
+cleaned_gss_data = gss_data %>% 
+  filter(!is.na(age_first_child)) %>%  
+  mutate(age_when_having_first_child = age - age_first_child) %>% 
+  select(age_when_having_first_child, age_at_first_marrige,education)
+
+str(cleaned_gss_data)
+my_LRmodel <- lm(age_when_having_first_child ~ age_at_first_marriage +
+                   as.factor(education), data=cleaned_gss_data)
+summary(my_LRmodel)
+
+
+
+```
+
+
+
+
+
+
+
+
+
 
 ## Model
 
