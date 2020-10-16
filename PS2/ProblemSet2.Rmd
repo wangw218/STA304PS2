@@ -37,8 +37,6 @@ cleaned_gss_data = gss_data %>%
   filter(!is.na(age_at_first_marriage) & !is.na(age_at_first_birth)) %>%  
   select(age_at_first_birth, age_at_first_marriage) 
 
-n = length(cleaned_gss_data$age_at_first_birth)
-
 # str(cleaned_gss_data)
 lmod <- lm(age_at_first_birth ~ age_at_first_marriage,
                  data=cleaned_gss_data)
