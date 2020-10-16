@@ -28,7 +28,6 @@ Introduce the data, explain why it was selected. Make sure to comment on importa
 
 ```{r warning=FALSE, message=FALSE}
 library(tidyverse)
-library(survey)
 gss_data = read_csv("gss.csv")
 
 #get the no NA
@@ -39,14 +38,6 @@ cleaned_gss_data = gss_data %>%
   select(age_at_first_birth, age_at_first_marriage) 
 
 n = length(cleaned_gss_data$age_at_first_birth)
-N = length(gss_data$age_at_first_birth)
-fpc.srs = rep(N, n)
-
-age.design <- svydesign(id=~1, data=cleaned_gss_data, fpc=fpc.srs)
-
-mysvylm <- svyglm(age_at_first_birth ~ age_at_first_marriage, age.design)
-summary(mysvylm)
-
 
 # str(cleaned_gss_data)
 lmod <- lm(age_at_first_birth ~ age_at_first_marriage,
