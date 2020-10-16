@@ -25,40 +25,61 @@ Here is where you should give insight into the setting and introduce the goal of
 ## Data
 
 Introduce the data, explain why it was selected. Make sure to comment on important features and highlight any potential drawbacks to the data.
+
 ```{r warning=FALSE, message=FALSE}
 library(tidyverse)
-# library(survey)
+library(survey)
 gss_data = read_csv("gss.csv")
 
-#get the no NA "age_first_child" caseid
+#get the no NA
+#age_at_first_marriage -> x
+#age_at_first_birth -> y (the age when he has a child)
 cleaned_gss_data = gss_data %>% 
-  filter(!is.na(age_first_child)) %>%  
-  mutate(age_when_having_first_child = age - age_first_child) %>% 
-  select(age_when_having_first_child, age_at_first_marriage,education)
+  filter(!is.na(age_at_first_marriage) & !is.na(age_at_first_birth)) %>%  
+  select(age_at_first_birth, age_at_first_marriage) 
 
-str(cleaned_gss_data)
-my_LRmodel <- lm(age_when_having_first_child ~ age_at_first_marriage +
-                   as.factor(education), data=cleaned_gss_data)
-summary(my_LRmodel)
+n = length(cleaned_gss_data$age_at_first_birth)
+N = length(gss_data$age_at_first_birth)
+fpc.srs = rep(N, n)
 
-hist(cleaned_gss_data$age_when_having_first_child)
+age.design <- svydesign(id=~1, data=cleaned_gss_data, fpc=fpc.srs)
+
+mysvylm <- svyglm(age_at_first_birth ~ age_at_first_marriage, age.design)
+summary(mysvylm)
 
 
+# str(cleaned_gss_data)
+lmod <- lm(age_at_first_birth ~ age_at_first_marriage,
+                 data=cleaned_gss_data)
+summary(lmod)
 
+cleaned_gss_data %>% 
+  ggplot(aes(age_at_first_birth))+
+  geom_histogram()+
+  labs(title="Histogram of Age when Having the First Child")
+
+
+qqnorm(cleaned_gss_data$age_at_first_birth, main="Normal QQ Plot: ", cex=0.5)
+qqline(cleaned_gss_data$age_at_first_birth)
+
+cleaned_gss_data %>% 
+  ggplot(aes(x=age_at_first_marriage,y=age_at_first_birth))+
+  geom_point()+geom_smooth(method=lm)
 ```
-
-
-
-
-
-
-
-
 
 
 ## Model
 
-Introduce the selected model here. It is expected that you will use some mathematical notation here. If you do please ensure that all notation is explained. You may also want to discuss any special (hypothetical) cases of your model here, as well as any caveats.  
+Introduce the selected model here. It is expected that you will use some mathematical notation here. If you do please ensure that all notation is explained. You may also want to discuss any special (hypothetical) cases of your model here, as well as any caveats. 
+
+
+The selected is a simple linear regression model $Y=\beta_0 + \beta_1x + e$ .Here, Y represents the variable like rate, x represents age. $\beta_0$ is the intercept parameter, $\beta_1$ is the slope parameter, e is the random error term.
+
+We use a simple linear regression  $y= b_0 + b_1x$  to fit it. 
+
+
+
+
 
 ## Results
 
