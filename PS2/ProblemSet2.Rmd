@@ -15,21 +15,27 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Abstract
 
-Here is where you give a brief (one paragraph overview of your entire paper). This should include some background/introduction, some methodology, results and conclusions.
+Our study used Multiple Linear Regression model to analyse the data set from General social survey on Family (cycle 31), 2017 for the relationship between income, the age of first marriage, and the age having first child. We found out that the age of having first child has a positive correlation with the age of first marriage and family income.
+
 
 ## Introduction
 
-Here is where you should give insight into the setting and introduce the goal of the analysis. Here you can introduce ideas and basic concepts regarding the study setting and the potential model. Again, this is the introduction, so you should be explaining the importance of the work that is ahead and hopefully build some suspense for the reader. You can also highlight what will be included in the subsequent sections.
+The paper is a detailed analysis of the relationship between sample's first marriage age & family income and  the age of having first child from General social survey on Family (cycle 31), 2017 of all the province of Canada by using Multiple Linear Regression. The goal is to find out that whether or not the age of first marriage and family income affect the age of first child, and the hypothesis is the age of having first child has a positive correlation with the age of first marriage and family income.
+
+According to x value of family income & age at first marriage and y value of age at first birth in the MLR model, we want to show that as age at first marriage increases, the age at first birth also increases, which is a positive relationship between age at first marriage and age at first birth. 
+
+Running through the whole paper, we will be introducing and analysing the details of our choice of data, the main requirements, and how we set the data in the data section, this part is for understanding the data. In model section and result section, you will be finding out the relationship between income, the age of first marriage, and the age having first child from the regression model we created. This is the most important part since it can lead to a conclusion. Moreover, the rest sections are the conclusions, the weakness of the study, data and analysis, and the subsequent work to be done. In the subsequent section, the issue of potential lurking variables are included, such as sending follow-up surveys.
+
 
 ## Data
 
 Our main data requirements are an individual first marriage age and family income and having the first child age. We use dataset from General social survey on Family (cycle 31), 2017. In order to better do analysis on the dataset, we use gss_cleaning.R to clean the data and produce a new csv file called gss.csv and analyze on this file. 
 
 The population is all people that has a child in 2017.  
-The frame is the people who has child and recived the General social survey on Family (cycle 31), 2017. 
+The frame is the people who has child and received the General social survey on Family (cycle 31), 2017. 
 The sample is people who has a child and done the General social survey on Family (cycle 31), 2017.
 
-The responents were found through the General social survey on Family (cycle 31), 2017. The key features of our data is that it includes the repsonents of all the province of Canada so it should have a good representatin to reflect the relationship between of first marriage age & family income and having the first child age. The weakness is that all collected Data has many NAs and there are only 4049 sample size.It might not be big enough to resprensent the relationship.  
+The responents were found through the General social survey on Family (cycle 31), 2017. The key features of our data is that it includes the responents of all the province of Canada so it should have a good representation to reflect the relationship between of first marriage age & family income and having the first child age. The weakness is that all collected Data has many NAs and there are only 4049 sample size.It might not be big enough to represent the relationship.  
 
 The data we use to do the analysis is "age_at_first_birth", "age_at_first_marriage", "income_family" columns from gss.csv. "age_at_first_birth" represents an individual age,in years,when he/she has first child; "age_at_first_marriage" represents an individual age,in years,when he/she first got marriaged. "Income_family" has 6 categories:"Less than \$25,000", "\$25,000 to \$49,999", "\$50,000 to \$74,999", "\$75,000 to \$99,999", "\$100,000 to \$ 124,999", "$125,000 and more". For eaiser analysis, we created a new varibale called "income_level" for the data. It has 6 numbers,from 0 to 5 and corresponds the 6 categories of "Income_family" we introduced above respectively. For example, 0 income level means "Less than \$25,000" family income.
 
@@ -113,7 +119,7 @@ cleaned_gss_data %>%
        title = "Figure 2: Scatter plot for Age at first marriage and Age at first birth")
 ```
 
-As shown from the graph, there is a clear data cluster on the left side of the plot. By looking at the trend of the cluster, it is clear that as age at first marriage increases, the age at first birht also increases, which is a positive relationship between age at first marriage and age at first birth. 
+As shown from the graph, there is a clear data cluster on the left side of the plot. By looking at the trend of the cluster, it is clear that as age at first marriage increases, the age at first birth also increases, which is a positive relationship between age at first marriage and age at first birth. 
 
 Next, we will combine age at first marriage with the other explantory variable, family income, to predict the age at first birth.
 
