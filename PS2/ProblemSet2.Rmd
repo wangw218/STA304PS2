@@ -23,7 +23,7 @@ Here is where you give a brief (one paragraph overview of your entire paper). Th
 Here is where you should give insight into the setting and introduce the goal of the analysis. Here you can introduce ideas and basic concepts regarding the study setting and the potential model. Again, this is the introduction, so you should be explaining the importance of the work that is ahead and hopefully build some suspense for the reader. You can also highlight what will be included in the subsequent sections.
 
 ## Data
-Our main data requirements are an individual first marriage age and having the first child age. We use dataset from General social survey on Family (cycle 31), 2017. In order to better do analysis on the dataset, we use gss_cleaning.R to clean the data and analyze on the cleaned data.  
+Our main data requirements are an individual first marriage age and family income and having the first child age. We use dataset from General social survey on Family (cycle 31), 2017. In order to better do analysis on the dataset, we use gss_cleaning.R to clean the data and analyze on the cleaned data.  
 The data has 20,602 sample size so it should be big enough to representativly reflect the relationship between of first marriage age and having the first child age.  
 A potential drawback is 2017 is 
 
@@ -31,55 +31,51 @@ A potential drawback is 2017 is
 library(tidyverse)
 gss_data = read_csv("gss.csv")
 
-#get the no NA's analyzing data
-#age_at_first_marriage -> x
-#age_at_first_birth -> y (the age when having the first child)
+
+#note here we create a new column income: the higher income is,the higher the income family is 
 cleaned_gss_data = gss_data %>% 
-  filter(!is.na(age_at_first_marriage) & !is.na(age_at_first_birth)) %>%  
-  select(age_at_first_birth, age_at_first_marriage) 
+  select(age_at_first_birth, income_family,age_at_first_marriage) %>% 
+  mutate(income = case_when(income_family == "Less than $25,000" ~ 0,
+                                      income_family == "$25,000 to $49,999" ~ 1, 
+                                       income_family == "$50,000 to $74,999" ~ 2, 
+                                       income_family == "$75,000 to $99,999" ~ 3, 
+                                       income_family == "$100,000 to $ 124,999" ~ 4, 
+                                       income_family == "$125,000 and more" ~5 ))
+
+lmod <- lm(age_at_first_birth ~  age_at_first_marriage + income,
+                 data=cleaned_gss_data)
+
 ```
 
 ## Model
 
-Introduce the selected model here. It is expected that you will use some mathematical notation here. If you do please ensure that all notation is explained. You may also want to discuss any special (hypothetical) cases of your model here, as well as any caveats.
+We use a multiple regression model based on (+ reference) in order to find if first birth age has some relationship with first marriage age and income.\\
 
+Our fitted model is $Birth_i = \hat{\beta_0}  + \hat{\beta_1}Marriage_i + \hat{\beta_2}Income_i, i=1,2,...,N$ where i stands for each individual.  
+Marriage_i (in years) means the first marriage age of the individual i. Income_i means the income level of individual i. (We define income_i in the range [1,5]. The higher income_i is, the higher income of individual i's family). Birth_i (in years) means having the first child age of the individual i. 
+ 
+$\hat{\beta_0}$ is meaningless in our scenario since there is no meaning to analyze a individual marriage at age 0.
+$\hat{\beta_1}$ means the changes of the having the first child age (in years) when the fist marriage age increase by 1 year.   
+$\hat{\beta_2}$ means the changes of the having the first child age (in years) when the Income increase by 1.  
 
+The software We use to run the model is RStudio.    
 
-We used a simple linear regression model with an intercept based on (+ reference). 
-$y_i = \beta_0  + \beta_1x_i + \epsilon_i, i=1,2,...,N$ 
-where i stands for each individual.$x_i$ means the first marriage age of the individual i.$y_i$ means having the first child age of the individual i. 
-$\beta_1$ means the average change of the having the first child age (in years) when the fist marriage age increase by 1 year.  
-$\beta_0$ is meaningless in our scenario since there is no meaning to analyze a individual marriage at age 0.  
-$\epsilon_1,... ,\epsilon_N$ are independent error terms with the expecation $E_{\epsilon}(\epsilon_i) = 0$ and the variance $V_{\epsilon}(\epsilon_i) = \sigma^2$.  
+summary(lmod)
 
-
-We use $\hat{y}= b_0 + b_1x$ to fit the model where x is the first marriage of a individual and $
-$\hat{y}$ is the fitted age when having the first child. $b_0$ and $b_1$ is an unbiased estimates of the parameter $\beta_0$ and $\beta_1$ in the above model respectively.
-
-The software I use to run the model is RStudio. To use the simple linear regression model, we need the model description about $\epsilon$ holds. We will use the      
-
-```{r warning=FALSE, message=FALSE}
-# fit the Simple linear regression model
-lmod <- lm(age_at_first_birth ~ age_at_first_marriage,
-                 data=cleaned_gss_data)
-```
+plot(cleaned_gss_data[c(1,3,4)])
 
 
 
 ## Results
-There is the Scattor Plot of Ages of Having First Child and First Marriage:  
+There is the Scattor Plot of Ages of Having First Child and First Marriage and Income:  
 ```{r warning=FALSE, message=FALSE}
-cleaned_gss_data %>% 
-  ggplot(aes(x=age_at_first_marriage,y=age_at_first_birth))+
-  geom_point()+geom_smooth(method=lm) + 
-  labs(x = "Age of First Marriage",
-       y = "Age of having first child",
-       title = "Figure 1:Scatter Plot of Ages of Having First Child and First Marriage")
+plot(cleaned_gss_data[c(1,3,4)], main = "Figure 1: Scatter plot of analysis")
+
 ```
 
 
 The following is our model summary:  
-```{r  include=FALSE}
+```{r  include = FALSE}
 summary(lmod)
 ```
 
@@ -90,8 +86,9 @@ summary(lmod)
         \hline
          Coefficients & Estimate & Std. Error & t value & Pr($>|t|$)\\
          \hline
-         $\beta_0$ & 8.38083 & 0.33329 & 25.15& <2e-16 \\
-         $\beta_1$ & 0.73254 & 0.01407& 52.06 & <2e-16 \\
+         $\beta_0$ & 8.02553 & 0.32972 & 24.34 & <2e-16 \\
+         $\beta_1$ & 0.71305 & 0.01396 & 51.06 & <2e-16 \\
+         $\beta_2$ & 0.44157 & 0.03916 & 11.28 & <2e-16 \\
          \hline
         \end{tabular}
   \end{center}
@@ -99,25 +96,21 @@ summary(lmod)
 
 Then we diagnose if the simple linear regression model is appropriate.  
 ```{r warning=FALSE, message=FALSE}
-cleaned_gss_data %>% 
-  ggplot(aes(x= age_at_first_birth)) + 
-  geom_histogram() +
-  labs(x = "Age of having first child",
-      title="Figure 2:Histogram of Age when Having the First Child")
-  
-qqnorm(cleaned_gss_data$age_at_first_birth, main="Figure 3:Normal QQ Plot of Age when Having the First Child: ", cex=0.5)
-qqline(cleaned_gss_data$age_at_first_birth)
+par(mfrow=c(2,2))
+plot(lmod, main= "Figure 2: Plots about Residuals")
 ```
 
 
 ## Discussion
-From Figure 1, we could see there is a positive linear trend between ages of fist marriage and having first child.  
-Form Figure 2, we could see the histogram of age when having the first child is right skewed, which is reasonable since peole tend to have children when they are young and when people are older, they tend to have worse fertility. 
-From Figure 3, we could see age when having the first child is approximately normally distributted. Therefore, the model is almost approximate.
+From Figure 1, we could see there is a positive linear trend between ages of having first child and fist marriage.   
+From Table 1, we could see the p value of the estimates of $\beta_1$ and $\beta_2$ is very small, which means there is strong evidence to reject that there are no linear realtionships between ages of having first child and fist marriage and between age of first child and income.  
+We diagnose the mutliple regression model in Figure 3. From those residual plots, we could see the model is not that perfect since there are some bad leverage points, and the standardized residuals does not show a perfect normal distribution, and the Resiudals vs Fitted plot shows a little pattern. However, the model is still alomst approximate since it does not break the rule much. In addition,the Multiple R-squared value is 0.4193 which can be seen from Table 1, this value represents the variance explained by our model. It is not bad.  
 
-Then,we can anazlyze the Table 1.We use the hypothesis test to if there is a linear relationship between ages fist marriage and having first child. () 
-$H_0 : \beta_1 = 0; H_a :\beta_1 \neq 0$.  
-I will set the significance level to be 1%. From the Table 1, the p value of the estimate of $\beta_1$ is 2e-16 < 0.01. (P value smaller means $H_0:$ the Null hypotheses is more likely to be wrong.) This means we could reject the Null hypotheses at the significance level 1%. 
+From Table 1, we get our fitted line is $Birth_i = 8.02553  + 0.71305Marriage_i + 0.44157Income_i, i=1,2,...,N$. Since $\hat{\beta_0}$ and $\hat{\beta_1}$ both positive, we could see as the age of marriage increses, the age of having first child increase, and as the income increses,the age of having first child increases. Since $\hat{\beta_0} > \hat{\beta_1}$, the age of marrige tend to have a bigger influence on the age of having first child.  
+
+Maybe rich people do not tend to have child later but this also might due to the reason that richer people tend to be older, we need to do further analysize on this.
+
+
 
 
 
@@ -132,6 +125,10 @@ Here you discuss subsequent work to be done after this report. This can include 
 
 ## References
 1. Wu, Changbao, and Mary E. Thompson. "Basic Concepts in Survey Sampling." Sampling Theory and Practice. Springer, Cham, 2020. 3-15.
+
+
+
+
 
 
 
