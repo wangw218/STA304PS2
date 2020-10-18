@@ -66,9 +66,8 @@ lmod <- lm(age_at_first_birth ~ age_at_first_marriage,
 
 
 
-
-
 ## Results
+There is the Scattor Plot of Ages of Having First Child and First Marriage:  
 ```{r warning=FALSE, message=FALSE}
 cleaned_gss_data %>% 
   ggplot(aes(x=age_at_first_marriage,y=age_at_first_birth))+
@@ -77,77 +76,39 @@ cleaned_gss_data %>%
        y = "Age of having first child",
        title = "Figure 1:Scatter Plot of Ages of Having First Child and First Marriage")
 ```
-From Figure 1, we could see there is a positive linear trend between the age of having first child and the age of first marriage.
-
-Then we diagnose if the simple linear regression model is appropriate.
-```{r warning=FALSE, message=FALSE}
-
-plot(cleaned_gss_data$age_at_first_marriage,lmod$residuals,main="Data Set 1")
-plot(cleaned_gss_data$age_at_first_birth,lmod$residuals,main="Data Set 1")
 
 
-cleaned_gss_data %>% 
-  ggplot(aes(x=age_at_first_marriage,y=age_at_first_birth))+
-  geom_point()+geom_smooth(method=lm) + 
-  labs(x = "Age of First Marriage",
-       y = "Age of having first child",
-       title = "Figure 1:Scatter Plot of Ages of Having First Child and First Marriage")
-
-
+The following is our model summary:  
+```{r  include=FALSE}
 summary(lmod)
-
-cleaned_gss_data %>% 
-  ggplot(aes(age_at_first_birth))+
-  geom_histogram()+
-  labs(title="Histogram of Age when Having the First Child")
-
-
-qqnorm(cleaned_gss_data$age_at_first_birth, main="Normal QQ Plot: ", cex=0.5)
-qqline(cleaned_gss_data$age_at_first_birth)
 ```
 
+\begin{table}[h!]
+  \begin{center}
+    \caption{Summary of the Parameters of SLR Model}
+      \begin{tabular}{|c|c|c|c|c|}
+        \hline
+         Coefficients & Estimate & Std. Error & t value & Pr($>|t|$)\\
+         \hline
+         $\beta_0$ & 8.38083 & 0.33329 & 25.15& <2e-16 \\
+         $\beta_1$ & 0.73254 & 0.01407& 52.06 & <2e-16 \\
+         \hline
+        \end{tabular}
+  \end{center}
+\end{table}
 
-
-
-summary(lmod)
-
-cleaned_gss_data %>% 
-  ggplot(aes(age_at_first_birth))+
-  geom_histogram()+
-  labs(title="Histogram of Age when Having the First Child")
-
-
-qqnorm(cleaned_gss_data$age_at_first_birth, main="Normal QQ Plot: ", cex=0.5)
-qqline(cleaned_gss_data$age_at_first_birth)
-
-
-```
+Then we diagnose if the simple linear regression model is appropriate.  
 ```{r warning=FALSE, message=FALSE}
 cleaned_gss_data %>% 
-  ggplot(aes(x=age_at_first_marriage,y=age_at_first_birth))+
-  geom_point()+geom_smooth(method=lm) + 
-  labs(x = "Age of First Marriage",
-       y = "Age of having first child",
-       title = "Figure 1:Scatter Plot of Ages of Having First Child and First Marriage")
-
-
-summary(lmod)
-
-cleaned_gss_data %>% 
-  ggplot(aes(age_at_first_birth))+
-  geom_histogram()+
-  labs(title="Histogram of Age when Having the First Child")
-
-
-qqnorm(cleaned_gss_data$age_at_first_birth, main="Normal QQ Plot: ", cex=0.5)
+  ggplot(aes(x= age_at_first_birth)) + 
+  geom_histogram() +
+  labs(x = "Age of having first child",
+      title="Figure 2:Histogram of Age when Having the First Child")
+  
+qqnorm(cleaned_gss_data$age_at_first_birth, main="Figure 3:Normal QQ Plot of Age when Having the First Child: ", cex=0.5)
 qqline(cleaned_gss_data$age_at_first_birth)
 ```
 
-
-
-Here you will include all results. This includes descriptive statistics, graphs, figures, tables, and model results. Please ensure that everything is well formatted and in a report style. You must also provide an explanation of the results in this section. You can overflow to an Appendix if needed. 
-
-Please ensure that everything is well labelled. So if you have multiple histograms and plots, calling them Figure 1, 2, 3, etc. and referencing them as Figure 1, Figure 2, etc. in your report will be expected. The reader should not get lost in a sea of information. Make sure to have the results be clean, well formatted and digestible.
 
 ## Discussion
 
