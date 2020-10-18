@@ -111,8 +111,15 @@ qqline(cleaned_gss_data$age_at_first_birth)
 
 
 ## Discussion
+From Figure 1, we could see there is a positive linear trend between ages of fist marriage and having first child.  
+Form Figure 2, we could see the histogram of age when having the first child is right skewed, which is reasonable since peole tend to have children when they are young and when people are older, they tend to have worse fertility. 
+From Figure 3, we could see age when having the first child is approximately normally distributted. Therefore, the model is almost approximate.
 
-Here you will discuss conclusions drawn from the results and comment on how it relates to the original goal of the study (which was specified in the Introduction).
+Then,we can anazlyze the Table 1.We use the hypothesis test to if there is a linear relationship between ages fist marriage and having first child. () 
+$H_0 : \beta_1 = 0; H_a :\beta_1 \neq 0$.  
+I will set the significance level to be 1%. From the Table 1, the p value of the estimate of $\beta_1$ is 2e-16 < 0.01. (P value smaller means $H_0:$ the Null hypotheses is more likely to be wrong.) This means we could reject the Null hypotheses at the significance level 1%. 
+
+
 
 # Weaknesses
 
