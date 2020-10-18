@@ -94,25 +94,13 @@ sd(cleaned_gss_data$age_at_first_birth)
 ```
 
 ```{r}
-library(tinytex)
-dg = data.frame(18.00 ,  21.50  , 24.60 ,  25.41,   28.30,   45.00, 5.243019 )
-colnames(dg) = c("Min.","1st Qu.", "Median", "Mean 3rd Qu.","Max.", "SD")
-dg
-
-
+df = data.frame("Min." = 18.00 , "1st Qu."=  21.50, "Median"= 24.60 , "Mean"= 25.41,
+                "3rd Qu." = 28.30, "Max."= 45.00, "SD" = 5.243019 )
+kable(df,caption = "Sumary of Age at First Birth")
 ```
 
-\begin{table}[h!]
-  \begin{center}
-    \caption{Summary of Age at first birth}
-      \begin{tabular} {|c|c|c|c|c|c|c|}
-        \hline
-        Min.  & 1st Qu.&  Median  &  Mean &3rd Qu. &   Max. & SD \\
-        18.00 &  21.50  & 24.60  & 25.41  & 28.30  & 45.00 & 5.243019\\
-        \hline
-      \end{tabular}
-  \end{center}
-\end{table}
+
+
 
 This is the Scattor Plot of Ages of Having First Child and First Marriage and Income:  
 
@@ -185,9 +173,15 @@ Subsequent works could be done to address the issue of lurking variables. One wa
 
 2. Sheather, S.(2009) "A Modern Approach to Regression with R." New York: Springer.
 
-3. Government of Canada, S. (2018, March 22). Canada's population estimates, fourth quarter 2017. from https://www150.statcan.gc.ca/n1/daily-quotidien/180322/dq180322c-eng.htm
+3. Government of Canada, S. (2018, March 22). Canada's population estimates, fourth quarter 2017. from https://www150.statcan.gc.ca/n1/daily-quotidien/180322/dq180322c-eng.htm.
 
-4https://sda-artsci-utoronto-ca.myaccess.library.utoronto.ca/sdaweb/dli2/gss/gss31/gss31/more_doc/GSS31_User_Guide.pdf
+4. Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+
+5. Yihui Xie (2019). knitr: A General-Purpose Package for Dynamic Report Generation in R. R package version 1.23.
+
+6. Yihui Xie (2015) Dynamic Documents with R and knitr. 2nd edition. Chapman and Hall/CRC. ISBN 978-1498716963
+
+7. Yihui Xie (2014) knitr: A Comprehensive Tool for Reproducible Research in R. In Victoria Stodden, Friedrich Leisch and Roger D.Peng, editors, Implementing Reproducible Computational Research. Chapman and Hall/CRC. ISBN 978-1466561595
 
 
 ## Appendix
@@ -195,7 +189,7 @@ Subsequent works could be done to address the issue of lurking variables. One wa
 In the appendix, we would diagnose if the MLR model is appropriate.  
 ```{r, echo=FALSE}
 par(mfrow=c(2,2))
-plot(lmod, main= "Plots about Residuals")
+plot(lmod, main= "Figure 3:Plots about Residuals")
 ```
 
 We diagnose the mutliple regression model in Figure 3. From those residual plots, we could see the model is not that perfect since there are some bad leverage points, and the standardized residuals does not show a perfect normal distribution, and the Residuals vs Fitted plot shows a little pattern. However, the model is still almost approximate since it does not break the rule much. 
