@@ -22,7 +22,7 @@ Our study used Multiple Linear Regression model to analyse the data set from Gen
 
 The paper is a detailed analysis of the relationship between sample's first marriage age & family income and  the age of having first child from General social survey on Family (cycle 31), 2017 of all the province of Canada by using Multiple Linear Regression. The goal is to find out that whether or not the age of first marriage and family income affect the age of first child, and the hypothesis is the age of having first child has a positive correlation with the age of first marriage and family income.
 
-According to x value of family income & age at first marriage and y value of age at first birth in the MLR model, we want to show that as age at first marriage increases, the age at first birth also increases, which is a positive relationship between age at first marriage and age at first birth. 
+According to value of family income & age at first marriage and value of age at first birth in the MLR model, we want to show that as age at first marriage increases, the age at first birth also increases, which is a positive relationship between age at first marriage and age at first birth. 
 
 Running through the whole paper, we will be introducing and analysing the details of our choice of data, the main requirements, and how we set the data in the data section, this part is for understanding the data. In model section and result section, you will be finding out the relationship between income, the age of first marriage, and the age having first child from the regression model we created. This is the most important part since it can lead to a conclusion. Moreover, the rest sections are the conclusions, the weakness of the study, data and analysis, and the subsequent work to be done. In the subsequent section, the issue of potential lurking variables are included, such as sending follow-up surveys.
 
@@ -76,10 +76,10 @@ $\beta_j$ for $0<j<k+1$ is the slope parameter for $x_j$\
 $e$ is the random error\
 
 It is also important to notice that we have two independent variables, age at first marriage and family income. The first variable is numeric, while the latter one is categorical. The data for family income are recorded in different ranges, such as 25,000 to 49,999, instead of continuous number, which is why we consider family income as a categorical variable. Thus, "dummy" variables coding should be used for the family income in regression. The set up is as following:
-$y=\hat{\beta_0} + \hat{\beta_1}x_1+ \hat{\beta_2}x_2+ \hat{\beta_3}x_3 + \hat{\beta_4}x_4 + \hat{\beta_5}x_5 + \hat{\beta_6}x_6 $
+$y=\hat{\beta_0} + \hat{\beta_1}x_1+ \hat{\beta_2}x_2+ \hat{\beta_3}x_3 + \hat{\beta_4}x_4 + \hat{\beta_5}x_5 + \hat{\beta_6}x_6$
 
 For the numeric variable, age at first marriage, it is represented by $x_1$
-income_family is Less than 25,000 (income group 0) is the baseline. All "x_i = 0" when the income family is less than 25,000\
+income_family is Less than 25,000 (income group 0) is the baseline. All $x_i = 0$ when the income family is less than 25,000\
 $x_2$ = 1 when income_family is of 25,000 to 49,999 (income group 1), else 0\
 $x_3$ = 1 when income_family is of 50,000 to 74,999 (income group 2),else 0\
 $x_4$ = 1 when income_family is of 75,000 to 99,999  (income group 3),else 0\
