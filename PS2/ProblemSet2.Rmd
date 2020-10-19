@@ -1,6 +1,6 @@
 ---
 title: "Study of facotors affecting age of having first child"
-author: "Wen Wang,"
+author: "Wen Wang, Zeyao Li, Yipeng Yin"
 date: "October 19, 2020"
 output:
   html_document:
@@ -15,29 +15,27 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Abstract
 
-Our study used Multiple Linear Regression model to analyse the data set from General social survey on Family (cycle 31), 2017 for the relationship between income, the age of first marriage, and the age having first child. We found out that the age of having first child has a positive correlation with the age of first marriage and family income.
+Our study used Multiple Linear Regression model to analyze the data set from General social survey on Family (cycle 31), 2017 for the relationship between income, the age of first marriage, and the age of having the first child. We found out that the age of having the first child has a positive correlation with the age of first marriage and family income.
 
 
 ## Introduction
 
-The paper is a detailed analysis of the relationship between sample's first marriage age & family income and  the age of having first child from General social survey on Family (cycle 31), 2017 of all the province of Canada by using Multiple Linear Regression. The goal is to find out that whether or not the age of first marriage and family income affect the age of first child, and the hypothesis is the age of having first child has a positive correlation with the age of first marriage and family income.
+The paper is a detailed analysis of the relationship between first marriage age & family income and the age of having first child based on the data from General social survey on Family (cycle 31), 2017 of Canada by using Multiple Linear Regression model (MLR). Having the first child is a remarkable moment in parents' life, so we want to find out factors that influence the age of people when their first child is born. In this study, the goal is to find out whether the age of first marriage and family income affect the age of first birth.
 
-According to value of family income & age at first marriage and value of age at first birth in the MLR model, we want to show that as age at first marriage increases, the age at first birth also increases, which is a positive relationship between age at first marriage and age at first birth. 
-
-Running through the whole paper, we will be introducing and analysing the details of our choice of data, the main requirements, and how we set the data in the data section, this part is for understanding the data. In model section and result section, you will be finding out the relationship between income, the age of first marriage, and the age having first child from the regression model we created. This is the most important part since it can lead to a conclusion. Moreover, the rest sections are the conclusions, the weakness of the study, data and analysis, and the subsequent work to be done. In the subsequent section, the issue of potential lurking variables are included, such as sending follow-up surveys.
+In the whole paper, we first introduce how we collect data and then analyze the data. We fit our data into an MLR and get some findings, and then we do discussions based on the results, to see how the results contribute to our goal of study. Some weakness and subsequent works that could be done to improve our analysis follows. 
 
 
 ## Data
 
-Our main data requirements are an individual first marriage age and family income and having the first child age. We use dataset from General social survey on Family (cycle 31), 2017. In order to better do analysis on the dataset, we use gss_cleaning.R to clean the data and produce a new csv file called gss.csv and analyze on this file. 
+Our main data requirements are the age of first marriage of an individual, family income, and age of having the first child. We use data set from General social survey on Family (cycle 31), 2017. In order to better do analysis on the data set, we use gss_cleaning.R to clean the data and produce a new CSV file called gss.csv and do analysis based on this file. 
 
-The population is all people that has a child in 2017.  
-The frame is the people who has child and received the General social survey on Family (cycle 31), 2017. 
-The sample is people who has a child and done the General social survey on Family (cycle 31), 2017.
+The population is all people that have children in 2017.  
+The frame is the people who have children and received the General social survey on Family (cycle 31), 2017. 
+The sample is people who have children and did the General social survey on Family (cycle 31), 2017.
 
-The responents were found through the General social survey on Family (cycle 31), 2017. The key features of our data is that it includes the responents of all the province of Canada so it should have a good representation to reflect the relationship between of first marriage age & family income and having the first child age. The weakness is that all collected Data has many NAs and there are only 4049 sample size.It might not be big enough to represent the relationship.  
+In terms of the sampling process of General social survey on Family (cycle 31), 2017, ten strata were created, and each strata represents a province in Canada. Respondents were selected by simple random sampling without replacement from each strata. The key feature of our data is that it includes the random selections of respondents from all provinces of Canada, so it should have a good representation of all Canadians. A limitation of data is that many collected data for our chosen variables in this report have non-responses, which means they do not have a child. The original data set has 20602 observations, but there are only 4049 samples left after removing NAs. Meanwhile, since only people with telephones had the chance to be selected in the sampling process, the data could be biased as we would not have responses from people who do not have a telephone. 
 
-The data we use to do the analysis is "age_at_first_birth", "age_at_first_marriage", "income_family" columns from gss.csv. "age_at_first_birth" represents an individual age,in years,when he/she has first child; "age_at_first_marriage" represents an individual age,in years,when he/she first got marriaged. "Income_family" has 6 categories:"Less than \$25,000", "\$25,000 to \$49,999", "\$50,000 to \$74,999", "\$75,000 to \$99,999", "\$100,000 to \$ 124,999", "$125,000 and more". For eaiser analysis, we created a new varibale called "income_level" for the data. It has 6 numbers,from 0 to 5 and corresponds the 6 categories of "Income_family" we introduced above respectively. For example, 0 income level means "Less than \$25,000" family income.
+The data we use to analyze on are "age_at_first_birth", "age_at_first_marriage", "income_family" columns from gss.csv. "age_at_first_birth" represents an individual age,in years,when he/she has first child; "age_at_first_marriage" represents an individual age,in years,when he/she first got married. "Income_family" has 6 categories:"Less than \$25,000", "\$25,000 to \$49,999", "\$50,000 to \$74,999", "\$75,000 to \$99,999", "\$100,000 to \$ 124,999", "$125,000 and more". For easier analysis, we create a new variable called "income_group" for the data. It has 6 numbers, from 1 to 6, and corresponds the 6 categories of "Income_family" we introduced above respectively. For example, 0 income level means "Less than \$25,000" family income.
 
 ```{r,include=FALSE}
 library(tidyverse)
@@ -48,51 +46,48 @@ cleaned_gss_data = gss %>% filter(age_at_first_birth!='NA')%>%
   filter(age_at_first_marriage!='NA')%>%
   filter(income_family!='NA')%>%
   select(age_at_first_birth, income_family,age_at_first_marriage)%>%
-  mutate(income_level = case_when(income_family == "Less than $25,000" ~ 0,
-                                  income_family == "$25,000 to $49,999" ~ 1,
-                                  income_family == "$50,000 to $74,999" ~ 2,
-                                  income_family == "$75,000 to $99,999" ~ 3,
-                                  income_family == "$100,000 to $ 124,999" ~ 4,
-                                  income_family == "$125,000 and more" ~5 ))
+  mutate(income_group = case_when(income_family == "Less than $25,000" ~ 1,
+                                  income_family == "$25,000 to $49,999" ~ 2,
+                                  income_family == "$50,000 to $74,999" ~ 3,
+                                  income_family == "$75,000 to $99,999" ~ 4,
+                                  income_family == "$100,000 to $ 124,999" ~ 5,
+                                  income_family == "$125,000 and more" ~6 ))
 
 ```
-There is the scatter plot of what the data looks like:  
-```{r}
-plot(cleaned_gss_data[c(1,3,4)],main = "Figure1 :Scatter plot of data")
 
-```
+Distributions of raw data are included in Appendix A.
 
 
 
 ## Model
 
-We use a multiple regression model(MLR) in order to find if age at first birth has some relationships with age at first marriage and income of the family.
+We use a multiple regression model (MLR) in order to find if age at first birth has some relationships with age at first marriage and income of the family.
 
-The general model for MLR has the form of $y={\beta_0}+{\beta_1}x_1+{\beta_1}x_2+.....+{\beta_k}x_k+e$, where:\
+The general model for MLR has the form of $y={\beta_0}+{\beta_1}x_1+{\beta_1}x_2+.....+{\beta_k}x_k+e$, (Equation 1) where:\
 $y_i$ is the dependent variable\
-$x$ are all independent variables\
+$x_i$ from i to k, are all independent variables\
 $\beta_0$ is the intercept parameter\
 $\beta_j$ for $0<j<k+1$ is the slope parameter for $x_j$\
 $e$ is the random error\
 
-It is also important to notice that we have two independent variables, age at first marriage and family income. The first variable is numeric, while the latter one is categorical. The data for family income are recorded in different ranges, such as 25,000 to 49,999, instead of continuous number, which is why we consider family income as a categorical variable. Thus, "dummy" variables coding should be used for the family income in regression. The set up is as following:
-$y=\hat{\beta_0} + \hat{\beta_1}x_1+ \hat{\beta_2}x_2+ \hat{\beta_3}x_3 + \hat{\beta_4}x_4 + \hat{\beta_5}x_5 + \hat{\beta_6}x_6$
+It is also important to notice that we have two independent variables, age at first marriage and family income. The first variable is numeric, while the latter one is categorical. The data for family income are recorded in different ranges, such as "25,000 to 49,999", instead of continuous numbers, which is why we consider family income as a categorical variable. Thus, "dummy" variables coding should be used for the family income in regression. The set up based on Equation 1 is:  
+$y=\hat{\beta_0} + \hat{\beta_1}x_1+ \hat{\beta_2}x_2+ \hat{\beta_3}x_3 + \hat{\beta_4}x_4 + \hat{\beta_5}x_5 + \hat{\beta_6}x_6$  (Equation 2)
 
-For the numeric variable, age at first marriage, it is represented by $x_1$
-income_family is Less than 25,000 (income group 0) is the baseline. All $x_i = 0$ when the income family is less than 25,000\
-$x_2$ = 1 when income_family is of 25,000 to 49,999 (income group 1), else 0\
-$x_3$ = 1 when income_family is of 50,000 to 74,999 (income group 2),else 0\
-$x_4$ = 1 when income_family is of 75,000 to 99,999  (income group 3),else 0\
-$x_5$ = 1 when income_family is of 100,000 to 124,999 (income group 4),else 0\
-$x_6$ = 1 when income_family is of 125,000 and more (income group 5), else 0\
+In the Equation 2, for the numeric variable, age at first marriage, it is represented by $x_1$.  
+income_family which is "Less than 25,000" (income group 1) is the baseline. All $x_i = 0$  where $i \neq 1$ when the income family is less than 25,000.\
+$x_2$ = 1 when income_family is of 25,000 to 49,999 (income group 2), else 0\
+$x_3$ = 1 when income_family is of 50,000 to 74,999 (income group 3),else 0\
+$x_4$ = 1 when income_family is of 75,000 to 99,999  (income group 4),else 0\
+$x_5$ = 1 when income_family is of 100,000 to 124,999 (income group 5),else 0\
+$x_6$ = 1 when income_family is of 125,000 and more (income group 6), else 0\
 
-The last step before fitting data into the model is to introduce our hypothesis. In the MLR model, the null hypothesis is that there is no relationships between age at first marriage & family income and age at first birth. The alternate hypothesis is that there exists some relationships between age at first marriage & family income and age at first birth.
+The last step before fitting data into the model is to introduce our hypothesis. In the MLR model, the null hypothesis is that there are no relationships between age at first marriage & family income and age at first birth. The alternate hypothesis is that there exist some relationships between age at first marriage & family income and age at first birth.
 
-In the next section, results regarding the MLR model would be presented by running it on RStudio. Model diagnostic issues with fitted MLR would be included in the appendix. 
+In the next section, results regarding the MLR model would be presented by running it on RStudio. Model diagnostic issues with fitted MLR would be included in Appendix B. 
 
 ## Results
 
-This is the descriptive statistics for the response variable, age at first birth. 
+Table 1 is the descriptive statistics for the response variable, age at first birth. 
 ```{r,include=FALSE}
 summary(cleaned_gss_data$age_at_first_birth)
 sd(cleaned_gss_data$age_at_first_birth)
@@ -102,13 +97,13 @@ sd(cleaned_gss_data$age_at_first_birth)
 ```{r}
 df = data.frame("Min." = 18.00 , "1st Qu."=  21.50, "Median"= 24.60 , "Mean"= 25.41,
                 "3rd Qu." = 28.30, "Max."= 45.00, "SD" = 5.243019 )
-kable(df,caption = "Sumary of Age at First Birth")
+kable(df,caption = "Table 1: Sumary of Age at First Birth")
 ```
 
 
 
 
-This is the Scattor Plot of Ages of Having First Child and First Marriage and Income:  
+Figure 1 is the scatter plot of age of first Marriage and having first child.  
 
 ```{r, echo=FALSE, warning = FALSE,message=FALSE }
 cleaned_gss_data %>% 
@@ -116,62 +111,110 @@ cleaned_gss_data %>%
   geom_point() + geom_smooth(method =lm) +
   labs(x = "Age at first marriage",
        y ="Age at first birth",
-       title = "Figure 2: Scatter plot for Age at first marriage and Age at first birth")
+       title = "Figure 1: Scatter plot for Age at first marriage and Age at first birth")
 ```
 
-As shown from the graph, there is a clear data cluster on the left side of the plot. By looking at the trend of the cluster, it is clear that as age at first marriage increases, the age at first birth also increases, which is a positive relationship between age at first marriage and age at first birth. 
+As shown from Figure 1, there is a clear data cluster on the left side of the plot. By looking at the trend of the data, it is clear that as age at first marriage increases, the age at first birth also increases, which means there is a positive relationship between age at first marriage and age at first birth. 
 
-Next, we will combine age at first marriage with the other explantory variable, family income, to predict the age at first birth.
+Next, we will combine age at first marriage with the other explanatory variable, family income, to predict the age at first birth.
 
-The following is our model summary:  
+The following  Table 2 is our model summary:  
 ```{r,echo=FALSE}
-lmod <- lm(age_at_first_birth ~ age_at_first_marriage+ as.factor(income_level),
+lmod <- lm(age_at_first_birth ~ age_at_first_marriage+ as.factor(income_group),
                  data=cleaned_gss_data)
 
+#Kable() is used to turn summary of regression model into a table
 kable(broom::tidy(lmod),caption="Table 2: Summary of regression output")
 ```
 
-From Figure 1, the fitted regression line could be obtained as $\hat{y}=7.97596+0.71365x_1+0.60340x_2+0.89821x_3-0.97441x_4+0.158902x_5+2.48667x_6$
+From Table 1 and based on Equation 2, the fitted regression line could be obtained as $\hat{y}=7.97596+0.71365x_1+0.60340x_2+0.89821x_3+0.97441x_4+0.158902x_5+2.48667x_6$ (Euqation 3)
+
+The following is our analysis of Equation 3:
 
 The estimate of $\beta_1$ is 0.71365, which means for one year increase in age at first marriage, the age at first birth increases by 0.71365 on average. 
 
-The estimate of $\beta_2$ is 0.60340, which means keeping others constant, in comparison to those in income group 0, people in income group 1 would have a 0.60340 increase in age at first birth on average.
+The estimate of $\beta_2$ is 0.60340, which means keeping age_at_marriage constant, in comparison to those in income group 1, people in income group 2 would have a 0.60340 increase in age at first birth on average.
 
-The estimate of $\beta_3$ is 0.89821, which means keeping others constant,in comparison to those in income group 0, people in income group 2 would have a 0.89821 increase in age at first birth on average.
+The estimate of $\beta_3$ is 0.89821, which means keeping age_at_marriage constant,in comparison to those in income group 1, people in income group 3 would have a 0.89821 increase in age at first birth on average.
 
-The estimate of $\beta_4$ is 0.97441, which means keeping others constant,in comparison to those in income group 0, people in income group 3 would have a 0.97441 increase in age at first birth on average.
+The estimate of $\beta_4$ is 0.97441, which means keeping age_at_marriage constant,in comparison to those in income group 1, people in income group 4 would have a 0.97441 increase in age at first birth on average.
 
-The estimate of $\beta_5$ is 0.158902, which means keeping others constant, in comparison to those in income group 0, people in income group 4 would have a 0.158902 increase in age at first birth on average.
+The estimate of $\beta_5$ is 0.158902, which means keeping age_at_marriage constant, in comparison to those in income group 1, people in income group 5 would have a 0.158902 increase in age at first birth on average. 
 
-The estimate of $\beta_6$ is 2.48667, which means keeping others constant, in comparison to those in income group 0, people in income group 5 would have a 2.48667 increase in age at first birth on average.
+The estimate of $\beta_6$ is 2.48667, which means keeping age_at_marriage constant, in comparison to those in income group 1, people in income group 6 would have a 2.48667 increase in age at first birth on average.
 
-The estimate of the intercept $\beta_0$ is 7.97596. However, if age of birth is 0, then no child would be born because the parent is not existed. Therefore, the estimate of the intercept has no practical meaning.
+The estimate of the intercept $\beta_0$ is 7.97596. However, if the age of birth is 0, then no child would be born because the parent does not exist. Therefore, the estimate of the intercept has no practical meaning.
 
 ## Discussion
-From Table 1, we can see the earliest age when people have their first child is 18 and the largest age is 45. Most people have there fist child at age 25. The standard variation is 5.243019,which is pretty big.
 
-From Figure 2, we could see there is a positive linear trend between ages of having first child and first marriage, which means that as age at first marriage increases, age at first birth goes up as well. This suggests age at first marriage might has some correlations with age at first birth. We thereby explore their relationship with the second exploratory variable, family income, which we consider is also a crucial factor that determines age at first birth.
+Table 1 shows the earliest age when people have their first child is 18 and the largest age is 45. Most people have their first child at age 25. The standard variation is 5.243019, which is pretty big. So we have dispersing data about age at first birth to work on. 
 
-Moving on to Table 2, we could see the results from fitting data into a MLR model. The slope parameter for age at first marriage is 0.71365, with a p-value less than 2e-16. Since the p-value is less than a significance level of 0.05, we would reject the null hypothesis that there is no relationship between age at first marriage and age at first birth. Also, the slope parameter is positive, so it is consistent with our graphic interpretation from Figure 1 that age at first marriage has a positive relationship with age at first birth.
+From Figure 2, we could see there is a positive linear trend between ages of having the first child and first marriage, which means that as age at first marriage increases, age at first birth goes up as well. This suggests age at first marriage might have some correlations with age at first birth. We thereby explore their relationship with the second exploratory variable, family income, which we consider is also a crucial factor that determines age at first birth.
 
-Table 2 also has the regression summary for the categorical variable, family income. It is clear that all p-values for variables of family income are less than 0.05, which is the significance level. Thus, there is strong evidence to reject the null hypothesis that there is no relationship between all groups of family income and age at first birth. 
+Moving on to Table 3, we could see the results from fitting data on an MLR model. The slope parameter for age at first marriage is 0.71365, with a p-value less than 2e-16. Since the p-value is less than a significance level of 0.05, we would reject the null hypothesis that there is no relationship between age at first marriage and age at first birth. Also, the slope parameter is positive, so it is consistent with our graphic interpretation from Figure 1 that age at first marriage has a positive relationship with age at first birth.
 
-It is also worth-noticing the values of $\beta$ increase for higher income group. This suggests that people with higher family income tend to have their first child when they are older than people with lower family income. 
+Table 3 also has the regression summary for the categorical variable, family income. It is clear that all p-values for variables of family income are less than 0.05, which is the significance level. Thus, there is strong evidence to reject the null hypothesis that there is no relationship between all groups of family income and age at first birth. 
+
+It is also worth-noticing the values of $\beta$ increase for the higher income group. This suggests people with higher family income tend to have their first child when they are older than people with lower family income. 
 
 Therefore, findings from the result sections demonstrate that age at first marriage and family income indeed are factors that contributing to the age of people when having their first child. Moreover, we find older age at first marriage and higher family income generally lead to an older age at first birth.
 
 
 # Weaknesses
 
-Limitations exist in our data and model. There are many NA value for our explanatory and dependent variables. The original gss data set has 20602 observations, but the cleaned data set used in this report only contains 4049 observations, about one fifth of the original sample size. With over 36 million total Canadian population in 2017, the reduced cleaned data set might not be a good representative for the whole population. 
+Limitations exist in our data and model. There are many NA values for our explanatory and dependent variables. The original GSS dataset has 20602 observations, but the cleaned data set used in this report only contains 4049 observations, about one-fifth of the original sample size. With over 36 million total Canadian population in 2017(Government of Canada), the reduced cleaned data set might not be a good representative for the whole population. 
 
-In addition, when people make the decision on how old they want to have a child, there are many influencial factors besides age at first marriage and family income. In other words, we need to take into account of lurking variables. One lurking variable could be the house size at the age of having a first child. 
+In addition, when people make the decision on how old they want to have a child, there are many influential factors besides age at first marriage and family income. In other words, we need to take into account of lurking variables. One lurking variable could be the house size. People who have a bigger house size might prefer to have their first children earlier. 
 
-Lastly, the Multiple R-squared value is 0.4204, which shows that 42.04% of the variance for age at first birth is explained by our model. This value is not high, so other models such as non-linear regression models might be better to explain the relationship in data.  
+Lastly, the Multiple R-squared value is 0.4204, which shows that 42.04% of the variance for age at first birth is explained by our model. This value is not high, so other models such as non-linear regression models might be better to explain the relationship between the data.  
 
 # Next Steps
 
-Subsequent works could be done to address the issue of lurking variables. One way is to send follow-up surveys to respondents from the 2017 gss study. Some additional questions could be asked, such as "what is your house size when they had their first child?", "what is the age of your partner when your first child is born?", and etc. By collecting data from these potential lurking variables, we could fit a more interesting MLR model, which also helps us to discover the factors affecting age at first birth in a comprehensive way. 
+Subsequent works could be done to address some issues from the result section, such as the lurking variables. One way is to send follow-up surveys by telephones to respondents from the 2017 GSS study. Some additional questions could be asked, such as "what is your house size when you have your first child?", "what is the age of your partner when your first child is born?", and etc. By collecting data from these potential lurking variables, we could fit a more interesting MLR model, which also helps us to discover the factors affecting age at first birth in a more comprehensive way. 
+
+
+## Appendix A
+
+The histograms of our raw data are presented here.
+```{r,message=FALSE}
+cleaned_gss_data %>% 
+  ggplot(aes(age_at_first_marriage)) +
+  geom_histogram()  +
+  labs(title = "Figure 2: Histogram of age at first marriage")
+```
+
+From Figure 2,the explanatory variable "age at first marriage" has a right skewed distribution. The mode is around 22 years old.
+
+```{r,message=FALSE}
+cleaned_gss_data %>% 
+  ggplot(aes(income_family)) +
+  geom_bar()  + theme(axis.text.x=element_text(angle=90))+
+  labs(title = "Figure 3: Bar plot of family income")
+```
+
+The explanatory variable "family income" is categorical, so a bar plot is used to show the distribution. From Figure 3, the mode occurs in the group with family income from 25,000 to 49,999.
+
+
+```{r,message=FALSE}
+cleaned_gss_data %>% 
+  ggplot(aes(age_at_first_birth)) +
+  geom_histogram()  +
+  labs(title = "Figure 4: Histogram of age at first birth")
+```
+
+From Figure 4, the response variable "age at first birth" has a right skewed distribution. The mode is around 23 years old.
+
+
+## Appendix B
+
+```{r, echo=FALSE}
+par(mfrow=c(2,2))
+plot(lmod, main= "Figure 5: Diagnostic plots for MLR")
+```
+
+We diagnose the multiple regression model in Plots about residuals which can be seen from Figure 5. From those residual plots, we could see the model is not that perfect. There are some bad leverage points, which are points beyond the cook distance in the SR vs Leverage plot. In other diagnostic plots, the standardized residuals do not show a perfect normal distribution in Normal Q-Q plot, and the Residuals vs Fitted plot shows some upward patterns. Overall, besides these issues, the model should still be good enough to fit data.
+
+
 
 ## References
 
@@ -189,13 +232,5 @@ Subsequent works could be done to address the issue of lurking variables. One wa
 
 7. Yihui Xie (2014) knitr: A Comprehensive Tool for Reproducible Research in R. In Victoria Stodden, Friedrich Leisch and Roger D.Peng, editors, Implementing Reproducible Computational Research. Chapman and Hall/CRC. ISBN 978-1466561595
 
-
-## Appendix
-
-In the appendix, we would diagnose if the MLR model is appropriate.  
-```{r, echo=FALSE}
-par(mfrow=c(2,2))
-plot(lmod, main= "Figure 3:Plots about Residuals")
-```
-
-We diagnose the mutliple regression model in Figure 3. From those residual plots, we could see the model is not that perfect since there are some bad leverage points, and the standardized residuals does not show a perfect normal distribution, and the Residuals vs Fitted plot shows a little pattern. However, the model is still almost approximate since it does not break the rule much. 
+8. 2017 General Social Survey (GSS): Families Cycle 31 User's Guide:
+https://sda-artsci-utoronto-ca.myaccess.library.utoronto.ca/sdaweb/dli2/gss/gss31/gss31/more_doc/GSS31_User_Guide.pdf
