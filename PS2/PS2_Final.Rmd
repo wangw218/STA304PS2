@@ -1,8 +1,9 @@
 ---
-title: "Study of facotors affecting age of having first child"
-author: "Wen Wang, Zeyao Li, Yipeng Yin"
+title: "Study of factors affecting age of having first child"
+author: "Wen Wang, Zeyao Li, He Ma, Yipeng Yin"
 date: "October 19, 2020"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---
@@ -12,6 +13,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 \newpage
+Code and data supporting this analysis is available at: http://github.com/wangw218/STA304PS2
 
 ## Abstract
 
@@ -22,20 +24,23 @@ Our study used Multiple Linear Regression model to analyze the data set from Gen
 
 The paper is a detailed analysis of the relationship between first marriage age & family income and the age of having first child based on the data from General social survey on Family (cycle 31), 2017 of Canada by using Multiple Linear Regression model (MLR). Having the first child is a remarkable moment in parents' life, so we want to find out factors that influence the age of people when their first child is born. In this study, the goal is to find out whether the age of first marriage and family income affect the age of first birth.
 
-In the whole paper, we first introduce how we collect data and then analyze the data. We fit our data into an MLR and get some findings, and then we do discussions based on the results, to see how the results contribute to our goal of study. Some weakness and subsequent works that could be done to improve our analysis follows. 
+In the whole paper, we first introduce how we collect data and then analyze the data. We fit our data into an MLR and get some findings, and then we do discussions based on the results, to see how the results contribute to our goal of study. Some weakness and subsequent works that could be done to improve our analysis follow. 
 
 
 ## Data
 
 Our main data requirements are the age of first marriage of an individual, family income, and age of having the first child. We use data set from General social survey on Family (cycle 31), 2017. In order to better do analysis on the data set, we use gss_cleaning.R to clean the data and produce a new CSV file called gss.csv and do analysis based on this file. 
 
-The population is all people that have children in 2017.  
-The frame is the people who have children and received the General social survey on Family (cycle 31), 2017. 
-The sample is people who have children and did the General social survey on Family (cycle 31), 2017.
+For the general social survey on Family (cycle 31), 2017:
+The target population is all people in Canada who are above 15 years old, excluding those from Yukon, Northwest Territories, and Nunavut. Full-time residents of institutions are also excluded.  
+The frame population is people who could be contacted by telephones. 
+The sampled population is people who took the survey by telephones.
+P.S. The above information are found on user's guide of gss data, which is cited in the reference section.
 
-In terms of the sampling process of General social survey on Family (cycle 31), 2017, ten strata were created, and each strata represents a province in Canada. Respondents were selected by simple random sampling without replacement from each strata. The key feature of our data is that it includes the random selections of respondents from all provinces of Canada, so it should have a good representation of all Canadians. A limitation of data is that many collected data for our chosen variables in this report have non-responses, which means they do not have a child. The original data set has 20602 observations, but there are only 4049 samples left after removing NAs. Meanwhile, since only people with telephones had the chance to be selected in the sampling process, the data could be biased as we would not have responses from people who do not have a telephone. 
 
-The data we use to analyze on are "age_at_first_birth", "age_at_first_marriage", "income_family" columns from gss.csv. "age_at_first_birth" represents an individual age,in years,when he/she has first child; "age_at_first_marriage" represents an individual age,in years,when he/she first got married. "Income_family" has 6 categories:"Less than \$25,000", "\$25,000 to \$49,999", "\$50,000 to \$74,999", "\$75,000 to \$99,999", "\$100,000 to \$ 124,999", "$125,000 and more". For easier analysis, we create a new variable called "income_group" for the data. It has 6 numbers, from 1 to 6, and corresponds the 6 categories of "Income_family" we introduced above respectively. For example, 0 income level means "Less than \$25,000" family income.
+In terms of the sampling process of General social survey on Family (cycle 31), 2017, ten strata were created, and each strata represents a province in Canada. Respondents were selected by simple random sampling without replacement from each strata. The key feature of our data is that it includes the random selections of respondents from all provinces of Canada, so it should have a good representation of all Canadians. A limitation of data is that many collected data for our chosen variables in this report have non-responses, which means they do not have a child. The original data set has 20602 observations, but there are only 4049 samples left after removing NAs. Meanwhile, since only people with telephones had the chance to be selected in the sampling process, the data could be biased as we would not have responses from people who could not be contacted by telephones. 
+
+The data we use to analyze on are "age_at_first_birth", "age_at_first_marriage", "income_family" columns from gss.csv. "age_at_first_birth" represents an individual age,in years,when he/she has first child; "age_at_first_marriage" represents an individual age,in years,when he/she first got married. "Income_family" has 6 categories:"Less than \$25,000", "\$25,000 to \$49,999", "\$50,000 to \$74,999", "\$75,000 to \$99,999", "\$100,000 to \$ 124,999", "$125,000 and more". For easier analysis, we create a new variable called "income_group" for the data. It has 6 numbers, from 1 to 6, and corresponds the 6 categories of "Income_family" we introduced above respectively. For example, 1 income level means "Less than \$25,000" family income.
 
 ```{r,include=FALSE}
 library(tidyverse)
@@ -103,7 +108,7 @@ kable(df,caption = "Table 1: Sumary of Age at First Birth")
 
 
 
-Figure 1 is the scatter plot of age of first Marriage and having first child.  
+Figure 1 is the scatter plot of age at first marriage and having first child.  
 
 ```{r, echo=FALSE, warning = FALSE,message=FALSE }
 cleaned_gss_data %>% 
@@ -124,20 +129,20 @@ lmod <- lm(age_at_first_birth ~ age_at_first_marriage+ as.factor(income_group),
                  data=cleaned_gss_data)
 
 #Kable() is used to turn summary of regression model into a table
-kable(broom::tidy(lmod),caption="Table 2: Summary of regression output")
+kable(broom::tidy(lmod),caption="Table 2: Summary of MLR output")
 ```
 
-From Table 1 and based on Equation 2, the fitted regression line could be obtained as $\hat{y}=7.97596+0.71365x_1+0.60340x_2+0.89821x_3+0.97441x_4+0.158902x_5+2.48667x_6$ (Euqation 3)
+From Table 1 and based on Equation 2, the fitted regression line could be obtained as $\hat{y}=7.97596+0.71365x_1+0.60340x_2+0.89821x_3+0.97441x_4+0.158902x_5+2.48667x_6$ (Equation 3)
 
-The following is our analysis of Equation 3:
+The following is our interpretation of Equation 3:
 
 The estimate of $\beta_1$ is 0.71365, which means for one year increase in age at first marriage, the age at first birth increases by 0.71365 on average. 
 
 The estimate of $\beta_2$ is 0.60340, which means keeping age_at_marriage constant, in comparison to those in income group 1, people in income group 2 would have a 0.60340 increase in age at first birth on average.
 
-The estimate of $\beta_3$ is 0.89821, which means keeping age_at_marriage constant,in comparison to those in income group 1, people in income group 3 would have a 0.89821 increase in age at first birth on average.
+The estimate of $\beta_3$ is 0.89821, which means keeping age_at_marriage constant, in comparison to those in income group 1, people in income group 3 would have a 0.89821 increase in age at first birth on average.
 
-The estimate of $\beta_4$ is 0.97441, which means keeping age_at_marriage constant,in comparison to those in income group 1, people in income group 4 would have a 0.97441 increase in age at first birth on average.
+The estimate of $\beta_4$ is 0.97441, which means keeping age_at_marriage constant, in comparison to those in income group 1, people in income group 4 would have a 0.97441 increase in age at first birth on average.
 
 The estimate of $\beta_5$ is 0.158902, which means keeping age_at_marriage constant, in comparison to those in income group 1, people in income group 5 would have a 0.158902 increase in age at first birth on average. 
 
@@ -149,11 +154,11 @@ The estimate of the intercept $\beta_0$ is 7.97596. However, if the age of birth
 
 Table 1 shows the earliest age when people have their first child is 18 and the largest age is 45. Most people have their first child at age 25. The standard variation is 5.243019, which is pretty big. So we have dispersing data about age at first birth to work on. 
 
-From Figure 2, we could see there is a positive linear trend between ages of having the first child and first marriage, which means that as age at first marriage increases, age at first birth goes up as well. This suggests age at first marriage might have some correlations with age at first birth. We thereby explore their relationship with the second exploratory variable, family income, which we consider is also a crucial factor that determines age at first birth.
+From Figure 1, we could see there is a positive linear trend between ages of having the first child and first marriage, which means that as age at first marriage increases, age at first birth goes up as well. This suggests age at first marriage might have some correlations with age at first birth. We thereby explore their relationship with the second exploratory variable, family income, which we consider is also a crucial factor that determines age at first birth.
 
-Moving on to Table 3, we could see the results from fitting data on an MLR model. The slope parameter for age at first marriage is 0.71365, with a p-value less than 2e-16. Since the p-value is less than a significance level of 0.05, we would reject the null hypothesis that there is no relationship between age at first marriage and age at first birth. Also, the slope parameter is positive, so it is consistent with our graphic interpretation from Figure 1 that age at first marriage has a positive relationship with age at first birth.
+Moving on to Table 2, we could see the results from fitting data on an MLR model. The slope parameter for age at first marriage is 0.71365, with a p-value less than 2e-16. Since the p-value is less than a significance level of 0.05, we would reject the null hypothesis that there is no relationship between age at first marriage and age at first birth. Also, the slope parameter is positive, so it is consistent with our graphic interpretation from Figure 1 that age at first marriage has a positive relationship with age at first birth.
 
-Table 3 also has the regression summary for the categorical variable, family income. It is clear that all p-values for variables of family income are less than 0.05, which is the significance level. Thus, there is strong evidence to reject the null hypothesis that there is no relationship between all groups of family income and age at first birth. 
+Table 2 also has the regression summary for the categorical variable, family income. It is clear that all p-values for variables of family income are less than 0.05, which is the significance level. Thus, there is strong evidence to reject the null hypothesis that there is no relationship between all groups of family income and age at first birth. 
 
 It is also worth-noticing the values of $\beta$ increase for the higher income group. This suggests people with higher family income tend to have their first child when they are older than people with lower family income. 
 
@@ -176,6 +181,7 @@ Subsequent works could be done to address some issues from the result section, s
 ## Appendix A
 
 The histograms of our raw data are presented here.
+
 ```{r,message=FALSE}
 cleaned_gss_data %>% 
   ggplot(aes(age_at_first_marriage)) +
