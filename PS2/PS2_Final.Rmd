@@ -12,9 +12,6 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-\newpage
-
-
 ## Abstract
 
 Our study used Multiple Linear Regression model to analyze the data set from General social survey on Family (cycle 31), 2017 for the relationship between income, the age of first marriage, and the age of having the first child. We found out that the age of having the first child has a positive correlation with the age of first marriage and family income.
