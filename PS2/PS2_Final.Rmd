@@ -1,5 +1,5 @@
 ---
-title: "Study of factors affecting age of having first child"
+title: "Study of Factors Affecting Ages of Having the First Child"
 author: "Wen Wang, Zeyao Li, He Ma, Yipeng Yin"
 date: "October 19, 2020"
 output:
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 \newpage
-Code and data supporting this analysis is available at: http://github.com/wangw218/STA304PS2
+
 
 ## Abstract
 
@@ -45,6 +45,7 @@ The data we use to analyze on are "age_at_first_birth", "age_at_first_marriage",
 ```{r,include=FALSE}
 library(tidyverse)
 library(knitr)
+library(broom)
 gss = read_csv("gss.csv")
 #note here we create a new column income: the higher income is,the higher the income family is 
 cleaned_gss_data = gss %>% filter(age_at_first_birth!='NA')%>%
@@ -220,7 +221,9 @@ plot(lmod, main= "Figure 5: Diagnostic plots for MLR")
 
 We diagnose the multiple regression model in Plots about residuals which can be seen from Figure 5. From those residual plots, we could see the model is not that perfect. There are some bad leverage points, which are points beyond the cook distance in the SR vs Leverage plot. In other diagnostic plots, the standardized residuals do not show a perfect normal distribution in Normal Q-Q plot, and the Residuals vs Fitted plot shows some upward patterns. Overall, besides these issues, the model should still be good enough to fit data.
 
+## Appendix C
 
+Code and data supporting this analysis is available at: http://github.com/wangw218/STA304PS2
 
 ## References
 
@@ -240,3 +243,9 @@ We diagnose the multiple regression model in Plots about residuals which can be 
 
 8. 2017 General Social Survey (GSS): Families Cycle 31 User's Guide:
 https://sda-artsci-utoronto-ca.myaccess.library.utoronto.ca/sdaweb/dli2/gss/gss31/gss31/more_doc/GSS31_User_Guide.pdf
+
+9. Introduction to broom. broom: let’s tidy up a bit,
+https://cran.r-project.org/web/packages/broom/vignettes/broom.html
+
+10. W. N. Venables, D. M. Smith and the R Core Team. An Introduction to R,
+https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf
